@@ -1,0 +1,42 @@
+<h2><div class="recipeTitle"><%= @recipe.title %></div></h2>
+<h3><div class="recipeDescription"><%= @recipe.description%></div></h3>
+</div>
+<div class="linkUser">
+  <%= link_to @user.name , user_path(@user) %>
+</div>
+<br>
+<a href="#" class="js-next" data-id="<%=@recipe.id%>">Next...</a>
+<div class="ingredients">
+  <% @recipe.ingredients.each do |ingredient| %>
+    <li><%= ingredient.title %></li>
+  <% end %>
+</div>
+<div>
+<% if policy(@recipe).destroy? %>
+  <%= link_to "Delete", recipe_path(@recipe), method: :delete %>
+<% end %>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+$(function () {
+  $(".js-next").on("click", function() {
+    var nextId = parseInt($(".js-next").attr("data-id")) + 1;
+    $.get("/recipes/" + nextId + ".json", function(data) {
+      $(".recipeTitle").text(data["recipe"]["title"]);
+      $(".recipeDescription").text(data["recipe"]["description"]);
+      $(".postTitle").text(data["recipe"]["user"]["name"]);
+      var userName = data["recipe"]["user"]["name"];
+      var userId = data["recipe"]["user"]["id"];
+      $(".linkUser").html("<a href='/users/" + userId + "' >" + userName + "</a>");
+      var ingredients = data["recipe"]["ingredients"];
+      for(var i = 0; i < ingredients.length; i++){
+        $(".ingredients").html("<li>" + ingredients[i]["title"] +"</li>")
+      }
+      // re-set the id to current on the link
+
+      $(".js-next").attr("data-id", data["recipe"]["id"]);
+
+    });
+  });
+});
+</script>

@@ -1,0 +1,42 @@
+<%= link_to "Go back", root_path %>
+
+<h3>New Recipe</h3>
+
+<%= form_for @recipe do |f| %>
+  Title: <%= f.text_field :title , autofocus: true%> <br> <br>
+  Description: <br> <%= f.text_area :description %> <br>
+ <br>
+
+ <%= f.hidden_field :user_id%>
+
+
+
+  Categories: <br>
+
+   <%= f.select :category_ids, Category.all.collect{|c| [c.title]}.uniq, :prompt => 'Select One' %>
+
+
+
+  <br> <br>
+
+
+
+  Ingredients: <br>
+   <%= f.fields_for :ingredients, @recipe.ingredients.build do |i| %>
+
+      <%= i.text_field :title %>
+
+  <% end %> <br>
+  <%= f.fields_for :ingredients, @recipe.ingredients.build do |i| %>
+
+      <%= i.text_field :title %>
+
+  <% end %> <br>
+  <%= f.fields_for :ingredients, @recipe.ingredients.build do |i| %>
+
+      <%= i.text_field :title %>
+
+  <% end %> <br>
+
+  <%= f.submit %>
+<% end %>
